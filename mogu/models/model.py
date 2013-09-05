@@ -19,11 +19,9 @@ class UserName(db.Model):
 class Game():
     name = db.StringProperty(indexed=False)#游戏名称
     appcode = db.StringProperty()#游戏包名
-
-class GameVersion():#游戏版本
-    appcode = db.StringProperty()#游戏包名
     versioncode = db.IntegerProperty()#版本号
     versionname = db.StringProperty()#版本名称
+
 
 class PropType():
     game = db.StringProperty()#游戏
@@ -39,11 +37,11 @@ class Prop(db.Model):
     desc = db.TextProperty()#介绍
     index = db.IntegerProperty()#索引
 
-    isgroup = db.BooleanProperty()#是否是某一种道具的打包套餐
-    groupcodeid = db.StringProperty()#道具打包套餐的id（道具套餐才起作用）
-    groupnum = db.IntegerProperty()#道具打包数量（道具套餐才起作用）
+    # isgroup = db.BooleanProperty()#是否是某一种道具的打包套餐
+    # groupcodeid = db.StringProperty()#道具打包套餐的id（道具套餐才起作用）
+    # groupnum = db.IntegerProperty()#道具打包数量（道具套餐才起作用）
 
-    version = db.ListProperty(type=int)#支持游戏的版本
+    # version = db.ListProperty(type=int)#支持游戏的版本
     ispub = db.BooleanProperty()#是否发布
     pricetype = db.ListProperty(type=int,indexed=False)#判断使用的价格类型（rmb 价格、游戏积分价格）
     price1 = db.IntegerProperty(indexed=False)#游戏积分价格
