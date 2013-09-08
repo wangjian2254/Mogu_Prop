@@ -228,11 +228,12 @@ class PropUpdate(Page):
 
 class ClientPropTypeList(Page):
     def get(self):
-        game = self.request.get('game')
-        if game:
+        games = self.request.get('games')
+        if games:
             list=[]
-            for p in getPropTypeList(game):
-                list.append({'id':p.key().id(),'name':p.name,'game':p.game,'index':p.index})
+            for game in games.split(','):
+                for p in getPropTypeList(game):
+                    list.append({'id':p.key().id(),'name':p.name,'game':p.game,'index':p.index})
             self.flush(getResult(list, True, u'获取道具类型成功。'))
             return
         self.flush(getResult('', False, u'获取道具类型，未提供id。'))
