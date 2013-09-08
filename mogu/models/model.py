@@ -10,27 +10,34 @@ __author__ = u'王健'
 from google.appengine.ext import db
 
 
+class Users(db.Model):
+    name = db.StringProperty()#本站昵称
+    username = db.EmailProperty()
+    password = db.StringProperty()
+    auth = db.StringProperty()
+
 #记录最新的用户名
 class UserName(db.Model):
     userName = db.StringProperty()#用户名
     sessionid = db.StringProperty()#单点登录sessionid
     datetime = db.DateTimeProperty()#上次登录时间
 
-class Game():
+class Game(db.Model):
     name = db.StringProperty(indexed=False)#游戏名称
     appcode = db.StringProperty()#游戏包名
     versioncode = db.IntegerProperty()#版本号
     versionname = db.StringProperty()#版本名称
 
 
-class PropType():
+
+class PropType(db.Model):
     game = db.StringProperty()#游戏
     name = db.StringProperty()#道具类型
     index = db.IntegerProperty()#索引
 
 class Prop(db.Model):
     game = db.StringProperty()#游戏
-    type = db.StringProperty()#道具类型
+    type = db.IntegerProperty()#道具类型
     name = db.StringProperty()#道具名称
     code = db.StringProperty()#道具识别码，根据道具识别码，来判断道具的作用
     codeid = db.StringProperty()#道具id,根据道具id判断道具种类（同样是炸弹、有些是赠送的、有些是花钱买的）
@@ -43,10 +50,10 @@ class Prop(db.Model):
 
     # version = db.ListProperty(type=int)#支持游戏的版本
     ispub = db.BooleanProperty()#是否发布
-    pricetype = db.ListProperty(type=int,indexed=False)#判断使用的价格类型（rmb 价格、游戏积分价格）
+    pricetype = db.IntegerProperty(indexed=False)#判断使用的价格类型（rmb 价格、游戏积分价格）
     price1 = db.IntegerProperty(indexed=False)#游戏积分价格
     price2 = db.IntegerProperty(indexed=False)#rmb价格
-    images = db.ListProperty(type=int)#道具图片列表
+    images = db.ListProperty(item_type=int)#道具图片列表
 
 
 class UserProp(db.Model):#用户所拥有的道具

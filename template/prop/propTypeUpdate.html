@@ -1,0 +1,54 @@
+{% extends "template/basepage.html" %}
+{% block navigator %}
+<a  href="/PropTypeList">道具类型管理</a>
+ >> <a href="#">添加道具类型</a> >> <a href="javascript:history.back(-1);">后退</a>
+{% endblock %}
+{% block content %}
+<form action="/PropTypeUpdate" method="post" id="form1" onsubmit="return valSubmit('form1');">
+    {% if id %}
+ <input type="hidden" name="id" value="{{obj.key().id()}}"/>
+    {%endif%}
+<table width="90%"  id="fromtable" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+  <tr  bgcolor="#ffffff">
+    <td style="padding-left:5px;" >游戏:</td>
+  </tr>
+  <tr  bgcolor="#ffffff">
+    <td>
+      <select name="game"  style="width:500px;"/>
+        {%for g in gamelist%}
+        <option value="{{g.appcode}}"  {%if obj.game==g.appcode%}selected=selected{%endif%}>{{g.name}}</option>
+        {%endfor%}
+      </select>
+    </td>
+  </tr>
+
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >道具类型名称:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  <input type="text" name="name" val="{'required':true,'title':'道具类型名称'}"   value="{{obj.name}}"  style="width:500px;"/><span class="red_star">*</span>	</td>
+  </tr>
+
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >排序索引:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  <input type="text" name="index" val="{'required':true,'title':'排序索引'}"  value="{{obj.index}}"  style="width:500px;"/><span class="red_star">*</span>	</td>
+  </tr>
+
+
+  <tr bgcolor="#ffffff" >
+    <td>&nbsp;</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td  align="left"  style="padding-left:25px;" >
+      <input type="submit" name="Submit" value="确定"/>
+	  <input type="reset" name="Reset" value="重置"/>
+	  <input type="button" name="Return" value="返回" onClick="javascript:history.back(-1);" />
+    </td>
+  </tr>
+</table>
+</form>
+{% endblock %}

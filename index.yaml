@@ -10,3 +10,18 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Prop
+  properties:
+  - name: game
+  - name: index
+
+- kind: Prop
+  properties:
+  - name: game
+  - name: type
+  - name: index
+
+- kind: PropType
+  properties:
+  - name: game
+  - name: index

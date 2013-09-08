@@ -1,0 +1,187 @@
+{% extends "template/basepage.html" %}
+{% block js %}
+<script>
+    function delImg(pid,id){
+                art.dialog({id:'msg',title:'提示',content:"要删除点击的图片么？",icon:'warning',lock: true,cancel:true,ok:function(){
+                    try{
+                        $j.get('/PropImageDelete?id='+id+'&pid='+pid,null,result,false);
+
+                    }catch(e){
+                        return ;
+                    }
+                }});
+            }
+    function result(result){
+                var resultobj=JSON2.parse(result);
+                if(resultobj.success){
+                    result_alert2('succeed',resultobj.message);
+                }else{
+                    result_alert2('warning',resultobj.message);
+                }
+                document.getElementById('img'+resultobj.result).style.display='none';
+            }
+    function changegame(){
+        var game=$j('#game').val();
+        $j.get('/getGameTypeList?game='+game,{},function(result,opt){
+            if(opt=='success'){
+                var list = JSON2.parse(result);
+                $j('#type option').remove();
+                for(var i=0;i<list.length;i++){
+                    $j('#type').append('<option value="'+list[i].id+'" >'+list[i].name+'</option>')
+                }
+                $j('#type').val('{{obj.type}}')
+            }else{
+
+            }
+
+        });
+    }
+</script>
+{% endblock %}
+{% block navigator %}
+<a  href="/PropList">游戏管理</a>
+ >> <a href="#">添加插件</a> >> <a href="javascript:history.back(-1);">后退</a>
+{% endblock %}
+{% block content %}
+<form action="/PropUpdate"  enctype="multipart/form-data" method="post" id="form1" onsubmit="return valSubmit('form1');">
+    {% if id %}
+ <input type="hidden" name="id" value="{{obj.key().id()}}"/>
+    {%endif%}
+<table width="90%"  id="fromtable" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+  <tr  bgcolor="#ffffff">
+    <td style="padding-left:5px;" >道具名称:</td>
+  </tr>
+  <tr  bgcolor="#ffffff">
+    <td>
+      <input type="text" name="name"  val="{'required':true,'title':'道具名称'}" value="{{obj.name}}" style="width:500px;"/>  <span class="red_star">*</span>  </td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >道具类型:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+        <select id="game" name="game"  style="width:200px;" onchange="changegame()"/>
+                        {%for g in gamelist%}
+                        <option value="{{g.appcode}}" {%if obj.game==g.appcode%}selected=selected{%endif%}>{{g.name}}</option>
+                        {%endfor%}
+                      </select>
+        <select id="type" name="type"  style="width:200px;"/>
+
+              </select>
+	  </td>
+  </tr>
+
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >道具效果码:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  <input type="text" name="code" val="{'required':true,'title':'道具效果码'}"  value="{{obj.code}}"  style="width:500px;"/><span class="red_star">*</span>	</td>
+  </tr>
+
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >道具id:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  <input type="text" name="codeid" val="{'required':true,'title':'道具id'}"  value="{{obj.codeid}}"  style="width:500px;"/><span class="red_star">*</span>	</td>
+  </tr>
+    <tr bgcolor="#ffffff" >
+        <td  style="padding-left:5px;" >介绍:</td>
+      </tr>
+      <tr bgcolor="#ffffff" >
+        <td>
+    	  <textarea name="desc"  style="width:500px;" rows="5">{{obj.desc}}</textarea>	</td>
+      </tr>
+    <tr bgcolor="#ffffff" >
+        <td style="padding-left:5px;" >排序索引:</td>
+      </tr>
+      <tr bgcolor="#ffffff" >
+        <td>
+    	  <input type="text" name="index" val="{'required':true,'title':'排序索引'}"  value="{{obj.index}}"  style="width:500px;"/><span class="red_star">*</span>	</td>
+      </tr>
+    <tr bgcolor="#ffffff" >
+        <td style="padding-left:5px;" >是否发布:</td>
+      </tr>
+      <tr bgcolor="#ffffff" >
+        <td>
+            <select name="type"  style="width:500px;"/>
+                <option value="1">发布</option>
+                <option value="0"><span  class="red_star">不发布</span></option>
+              </select>
+        </td>
+      </tr> <tr bgcolor="#ffffff" >
+        <td style="padding-left:5px;" >购买方式:</td>
+      </tr>
+      <tr bgcolor="#ffffff" >
+        <td>
+            <select name="pricetype"  style="width:500px;"/>
+                <option value="1"  {%if obj.pricetype==1%}selected=selected{%endif%}>游戏虚拟货币</option>
+                <option value="2"  {%if obj.pricetype==2%}selected=selected{%endif%}>人民币</option>
+                <option value="3" {%if obj.pricetype==3%}selected=selected{%endif%}><span  class="red_star">都可以</span></option>
+              </select>
+        </td>
+      </tr>
+    <tr bgcolor="#ffffff" >
+            <td style="padding-left:5px;" >游戏虚拟货币价格:</td>
+          </tr>
+          <tr bgcolor="#ffffff" >
+            <td>
+        	  <input type="text" name="price1"  value="{{obj.price1}}"  style="width:500px;"/></td>
+          </tr>
+    <tr bgcolor="#ffffff" >
+            <td style="padding-left:5px;" >人民币:</td>
+          </tr>
+          <tr bgcolor="#ffffff" >
+            <td>
+        	  <input type="text" name="price2"  value="{{obj.price2|default('',true)}}"  style="width:500px;"/></td>
+          </tr>
+    <tr bgcolor="#ffffff" >
+        <td style="padding-left:5px;" >道具图片:</td>
+      </tr>
+      <tr bgcolor="#ffffff" >
+        <td>
+    	  图片1：<input type="file" name="image1"   style="width:500px;"/>
+        </td>
+      </tr>
+    <tr bgcolor="#ffffff" >
+        <td>
+    	  图片2：<input type="file" name="image2"   style="width:500px;"/>
+        </td>
+      </tr>
+    <tr bgcolor="#ffffff" >
+        <td>
+    	  图片3：<input type="file" name="image3"   style="width:500px;"/>
+        </td>
+      </tr>
+  <tr bgcolor="#ffffff" >
+    <td>&nbsp;</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td  align="left"  style="padding-left:25px;" >
+      <input type="submit" name="Submit" value="确定"/>
+	  <input type="reset" name="Reset" value="重置"/>
+	  <input type="button" name="Return" value="返回" onClick="javascript:history.back(-1);" />
+        {%if plugin%}
+	  <input type="button" name="Return" value="上传新版本" onClick="javascript:location.href='/PluginUpload?pluginid={{plugin.key().id()}}';" />
+        {%endif%}
+    </td>
+  </tr>
+    <tr bgcolor="#ffffff" >
+        <td>
+    	  已上传图片：
+        </td>
+      </tr>
+       <tr bgcolor="#ffffff" >
+        <td>
+    	  {%for img in obj.images%}
+            <div style="margin: 5px;float: left;"><a href="javascript:delImg('{{obj.key().id()}}','{{img}}');"><img id="img{{img}}" src="/download?image_id={{img}}" border="0"></a></div>
+    	  {%endfor%}
+        </td>
+      </tr>
+</table>
+</form>
+        <script>
+            changegame();
+        </script>
+{% endblock %}

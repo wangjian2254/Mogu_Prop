@@ -1,0 +1,80 @@
+{% extends "template/basepage.html" %}
+{%block js%}
+        <script  type="text/javascript">
+            function delPlugin(id){
+                art.dialog({id:'msg',title:'提示',content:"要删除点击的记录么？",icon:'warning',lock: true,cancel:true,ok:function(){
+                                try{
+                                    $j.get('/{{objname}}Delete?id='+id,null,result,false);
+
+                                }catch(e){
+                                    return ;
+                                }
+                            }});
+            }
+            function result(result){
+                var resultobj=JSON2.parse(result);
+                if(resultobj.success){
+                    result_alert2('succeed',resultobj.message);
+                }else{
+                    result_alert2('warning',resultobj.message);
+                }
+                document.getElementById('tr'+resultobj.result).style.display='none';
+            }
+            function changePage(){
+                document.getElementById('proptypeform').submit();
+            }
+            function changegame(){
+                    var game=$j('#game').val();
+                    $j.get('/getGameTypeList?game='+game,{},function(result,opt){
+                        if(opt=='success'){
+                            var list = JSON2.parse(result);
+                            $j('#type option').remove();
+                            $j('#type').append('<option value="">--全部--</option>')
+                            for(var i=0;i<list.length;i++){
+                                $j('#type').append('<option value="'+list[i].id+'">'+list[i].name+'</option>');
+                            }
+                            changePage();
+                        }else{
+
+                        }
+
+                    });
+                }
+        </script>
+{%endblock%}
+{% block navigator %}
+<a  href="/List/{{objname}}">游戏列表</a>
+ >> <a href="/{{objname}}Update">添加游戏</a> >> <a href="javascript:history.back(-1);">后退</a>
+{% endblock %}
+{% block content %}
+<table width="90%" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+    <tr bgcolor="#ffffff"  height="25">
+    <td width="40px"  align="right">选择游戏：</td>
+    <td width="40px"  align="left">
+        <form action="/List/{{objname}}" method="get" id="proptypeform" target="proplist">
+            <select id="game" name="game"  style="width:200px;" onchange="changegame()"/>
+            {%for g in gamelist%}
+            <option value="{{g.appcode}}">{{g.name}}</option>
+            {%endfor%}
+          </select>
+            <select id="type" name="type"  style="width:200px;" onchange="changePage()"/>
+
+             </select>
+        </form>
+    </td>
+    </tr>
+</table>
+<table width="90%" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+    <tr bgcolor="#ffffff"  height="25">
+    <td  align="center">
+     <iframe src="" name="proplist" style="border: 0px;width: 100%;height: 700px;">
+
+     </iframe>
+    </td>
+    </tr>
+
+</table>
+<script>
+            changegame();
+        </script>
+{% endblock %}

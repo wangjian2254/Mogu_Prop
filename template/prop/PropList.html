@@ -1,0 +1,57 @@
+{% extends "template/basepage.html" %}
+{%block js%}
+        <script  type="text/javascript">
+            function delPlugin(id){
+                art.dialog({id:'msg',title:'提示',content:"要删除点击的记录么？",icon:'warning',lock: true,cancel:true,ok:function(){
+                                try{
+                                    $j.get('/{{objname}}Delete?id='+id,null,result,false);
+
+                                }catch(e){
+                                    return ;
+                                }
+                            }});
+            }
+            function result(result){
+                var resultobj=JSON2.parse(result);
+                if(resultobj.success){
+                    result_alert2('succeed',resultobj.message);
+                }else{
+                    result_alert2('warning',resultobj.message);
+                }
+                document.getElementById('tr'+resultobj.result).style.display='none';
+            }
+            function changePage(){
+                document.getElementById('proptypeform').submit();
+            }
+        </script>
+{%endblock%}
+{% block navigator %}
+
+{% endblock %}
+{% block content %}
+
+<table width="90%" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+    <tr bgcolor="#ffffff"  height="25">
+    <td width="40px"  align="center">序号</td>
+    <td width="150px" align="center">道具名称</td>
+    <td width="150px" align="center">道具效果码</td>
+    <td width="150px" align="center">发布状态</td>
+    <td width="150px" align="center">购买方式</td>
+    <td width="150px" align="center">游戏币/RMB</td>
+    <td width="80px" align="center">索引</td>
+    <td width="200px;" align="center">操作</td>
+    </tr>
+    {% for obj in objlist%}
+    <tr id="tr{{obj.key().id()}}" style="cursor:hand"  height="25"  onmouseover="cells_color(this,1);" onMouseOut="cells_color(this,2);" bgcolor="#ffffff">
+    <td align="center">{{loop.index}}</td>
+    <td align="center"><a href="/{{objname}}Update?id={{obj.key().id()}}" target="mainFrame">{{obj.name}}</a></td>
+    <td align="center">{{obj.code}}</td>
+    <td align="center">{%if obj.ispub%}发布{%else%}不发布{%endif%}</td>
+    <td align="center">{% if obj.pricetype==1%}游戏币{%endif%}{% if obj.pricetype==2%}RMB{%endif%}{% if obj.pricetype==3%}都可以{%endif%}</td>
+    <td align="center">{{obj.price1|default('不能用游戏币',true)}}/{{obj.price2|default('不能用RMB',true)}}</td>
+    <td align="center">{{obj.index}}</td>
+    <td align="center"><a href="/{{objname}}Update?id={{obj.key().id()}}" target="mainFrame">修改</a>&nbsp;|&nbsp;<a href="javascript:delPlugin('{{obj.key().id()}}')">删除</a></td>
+    </tr>
+    {%endfor%}
+</table>
+{% endblock %}

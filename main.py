@@ -17,52 +17,60 @@
 #
 import webapp2
 from mogu.login import Login, Top, Menu
-from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
+# from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
 from mogu.picture import ImageDownload
-from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, ServeHandler, PluginUpload2
-from mogu.user import UserLogin, UserRegister
+# from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, ServeHandler, PluginUpload2
+from mogu.prop import GameUpdate, ObjList, PropTypeUpdate, PropUpdate, GetGameTypeList, ObjDelete
+# from mogu.user import UserLogin, UserRegister
 
 
 app = webapp2.WSGIApplication([
                                   ('/', Login),
                                   ('/login', Login),
-                                  # ('/top', Top),
-                                  # ('/menu', Menu),
+                                  ('/top', Top),
+                                  ('/menu', Menu),
                                   # ('/UserLogin', UserLogin),
                                   # ('/UserRegister', UserRegister),
 
+                                #道具管理
+                                ('/getGameTypeList',GetGameTypeList),
+                                ('/GameUpdate',GameUpdate),
+                                ('/PropTypeUpdate',PropTypeUpdate),
+                                ('/PropUpdate',PropUpdate),
+                                ('/List/([a-zA-Z]{1,10})',ObjList),
+                                ('/([a-zA-Z]{1,10})Delete',ObjDelete),
                                   # 插件管理 接口
-                                  ('/PluginList', PluginList),
-                                  ('/PluginUpdate', PluginUpdate),
-                                  ('/PluginUpload', PluginUpload),
-                                  ('/PluginUpload2', PluginUpload2),
-                                  ('/PluginImageDel', PluginImageDel),
-                                  ('/PluginDelete', PluginDelete),
-                                  ('/PluginVersionDelete', PluginVersionDelete),
-                                  ('/PluginDetail', PluginDetail),
+                                  # ('/PluginList', PluginList),
+                                  # ('/PluginUpdate', PluginUpdate),
+                                  # ('/PluginUpload', PluginUpload),
+                                  # ('/PluginUpload2', PluginUpload2),
+                                  # ('/PluginImageDel', PluginImageDel),
+                                  # ('/PluginDelete', PluginDelete),
+                                  # ('/PluginVersionDelete', PluginVersionDelete),
+                                  # ('/PluginDetail', PluginDetail),
+                                  #
+                                  # ('/upload', UploadHandler),
+                                  # ('/serve/([^/]+)?', ServeHandler),
 
-                                  ('/upload', UploadHandler),
-                                  ('/serve/([^/]+)?', ServeHandler),
 
+                                  # #插件 手机端接口
+                                  # ('/PluginDownload', PluginDownload),
+                                  # ('/PluginInfoUpdate', PluginInfoUpdate),
+                                  # ('/PluginInfoAll', PluginInfoAll),
+                                  # ('/PluginSearch', PluginSearch),
 
-                                  #插件 手机端接口
-                                  ('/PluginDownload', PluginDownload),
-                                  ('/PluginInfoUpdate', PluginInfoUpdate),
-                                  ('/PluginInfoAll', PluginInfoAll),
-                                  ('/PluginSearch', PluginSearch),
-
-                                  # 系统消息管理 接口
-                                  ('/NoticeList',NoticeList),
-                                  ('/NoticeUpdate',NoticeUpdate),
-                                  ('/NoticeDelete',NoticeDelete),
-                                  ('/NoticeDetail',NoticeDetail),
-
-                                  # 系统消息 手机接口
-                                  ('/NoticeInfoUpdate',NoticeInfoUpdate),
+                                  # # 系统消息管理 接口
+                                  # ('/NoticeList',NoticeList),
+                                  # ('/NoticeUpdate',NoticeUpdate),
+                                  # ('/NoticeDelete',NoticeDelete),
+                                  # ('/NoticeDetail',NoticeDetail),
+                                  #
+                                  # # 系统消息 手机接口
+                                  # ('/NoticeInfoUpdate',NoticeInfoUpdate),
 
                                   # 图片下载 手机接口
                                   ('/download',ImageDownload),
-                                  ('/ImageDel',ImageDel),
+                                  # ('/ImageDel',ImageDel),
 
 
 
