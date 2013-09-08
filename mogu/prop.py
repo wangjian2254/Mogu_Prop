@@ -288,7 +288,7 @@ class ClientPropBuy(Page):
             upb.price1 = int(price1)
             upb.price2 = int(price2)
             upb.put()
-            uprop = getUserProp()
+            uprop = getUserProp(username,propcodeid)
             if uprop:
                 uprop.num=uprop.num+int(num)
                 uprop.put()
@@ -321,7 +321,7 @@ class ClientPropUsed(Page):
             upb.datetime = datetime.datetime.utcnow() + timezone
 
 
-            uprop = getUserProp()
+            uprop = getUserProp(username,propcodeid)
             if uprop:
                 if uprop.num>=int(num):
                     uprop.num=uprop.num-int(num)

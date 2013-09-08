@@ -40,6 +40,7 @@
     <td width="40px"  align="center">序号</td>
     <td width="150px" align="center">道具名称</td>
     <td width="150px" align="center">道具类型</td>
+    <td width="150px" align="center">道具图片</td>
     <td width="150px" align="center">道具效果码</td>
     <td width="150px" align="center">发布状态</td>
     <td width="150px" align="center">购买方式</td>
@@ -51,6 +52,11 @@
     <tr id="tr{{obj.key().id()}}" style="cursor:hand"  height="25"  onmouseover="cells_color(this,1);" onMouseOut="cells_color(this,2);" bgcolor="#ffffff">
     <td align="center">{{loop.index}}</td>
     <td align="center"><a href="/{{objname}}Update?id={{obj.key().id()}}" target="mainFrame">{{obj.name}}</a></td>
+    <td align="center">
+        {%for img in obj.images%}
+        <div style="margin: 5px;float: left;"><img id="img{{img}}" src="/download?image_id={{img}}" border="0"></div>
+      {%endfor%}
+    </td>
     <td align="center" class="typeProp">{{obj.type}}</td>
     <td align="center">{{obj.code}}</td>
     <td align="center">{%if obj.ispub%}发布{%else%}不发布{%endif%}</td>
