@@ -20,7 +20,7 @@ from mogu.login import Login, Top, Menu
 # from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
 from mogu.picture import ImageDownload
 # from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, ServeHandler, PluginUpload2
-from mogu.prop import GameUpdate, ObjList, PropTypeUpdate, PropUpdate, GetGameTypeList, ObjDelete
+from mogu.prop import GameUpdate, ObjList, PropTypeUpdate, PropUpdate, GetGameTypeList, ObjDelete, ClientPropList, ClientPropTypeList, ClientPropUsed, ClientPropBuy, ClientUserProp
 # from mogu.user import UserLogin, UserRegister
 
 
@@ -39,6 +39,11 @@ app = webapp2.WSGIApplication([
                                 ('/PropUpdate',PropUpdate),
                                 ('/List/([a-zA-Z]{1,10})',ObjList),
                                 ('/([a-zA-Z]{1,10})Delete',ObjDelete),
+                                ('/ClientPropTypeList',ClientPropTypeList),
+                                ('/ClientPropList',ClientPropList),
+                                ('/ClientUserProp',ClientUserProp),
+                                ('/ClientPropBuy',ClientPropBuy),
+                                ('/ClientPropUsed',ClientPropUsed),
                                   # 插件管理 接口
                                   # ('/PluginList', PluginList),
                                   # ('/PluginUpdate', PluginUpdate),

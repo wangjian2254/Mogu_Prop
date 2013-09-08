@@ -1,10 +1,5 @@
 {% extends "template/basepage.html" %}
 {%block js%}
-        <style>
-            .typeProp{
-
-            }
-        </style>
         <script  type="text/javascript">
             function delPlugin(id){
                 art.dialog({id:'msg',title:'提示',content:"要删除点击的记录么？",icon:'warning',lock: true,cancel:true,ok:function(){
@@ -31,56 +26,40 @@
         </script>
 {%endblock%}
 {% block navigator %}
-
+<a  href="/List/{{objname}}">游戏列表</a>
+ >> <a href="/{{objname}}Update">添加游戏</a> >> <a href="javascript:history.back(-1);">后退</a>
 {% endblock %}
 {% block content %}
-
+<table width="90%" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+    <tr bgcolor="#ffffff"  height="25">
+    <td width="40px"  align="right">选择游戏：</td>
+    <td width="40px"  align="left">
+        <form action="/List/{{objname}}" method="get" id="proptypeform">
+        <select name="game" style="width: 300px;" onchange="changePage()">
+            <option value="">--请选择--</option>
+            {%for g in gamelist%}
+            <option value="{{g.appcode}}" {%if game==g.appcode%}selected=selected{%endif%}>{{g.name}}</option>
+            {%endfor%}
+        </select>
+        </form>
+    </td>
+    </tr>
+</table>
 <table width="90%" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
     <tr bgcolor="#ffffff"  height="25">
     <td width="40px"  align="center">序号</td>
-    <td width="150px" align="center">道具名称</td>
-    <td width="150px" align="center">道具类型</td>
-    <td width="150px" align="center">道具效果码</td>
-    <td width="150px" align="center">发布状态</td>
-    <td width="150px" align="center">购买方式</td>
-    <td width="150px" align="center">游戏币/RMB</td>
+    <td width="150px" align="center">道具类型名称</td>
     <td width="80px" align="center">索引</td>
     <td width="200px;" align="center">操作</td>
     </tr>
     {% for obj in objlist%}
     <tr id="tr{{obj.key().id()}}" style="cursor:hand"  height="25"  onmouseover="cells_color(this,1);" onMouseOut="cells_color(this,2);" bgcolor="#ffffff">
     <td align="center">{{loop.index}}</td>
-    <td align="center"><a href="/{{objname}}Update?id={{obj.key().id()}}" target="mainFrame">{{obj.name}}</a></td>
-    <td align="center" class="typeProp">{{obj.type}}</td>
-    <td align="center">{{obj.code}}</td>
-    <td align="center">{%if obj.ispub%}发布{%else%}不发布{%endif%}</td>
-    <td align="center">{% if obj.pricetype==1%}游戏币{%endif%}{% if obj.pricetype==2%}RMB{%endif%}{% if obj.pricetype==3%}都可以{%endif%}</td>
-    <td align="center">{{obj.price1|default('不能用游戏币',true)}}/{{obj.price2|default('不能用RMB',true)}}</td>
+    <td align="center"><a href="/{{objname}}Update?id={{obj.key().id()}}">{{obj.name}}</a></td>
+    <!--<td>{{obj.kinds|join(' ')}}</td>-->
     <td align="center">{{obj.index}}</td>
-    <td align="center"><a href="/{{objname}}Update?id={{obj.key().id()}}" target="mainFrame">修改</a>&nbsp;|&nbsp;<a href="javascript:delPlugin('{{obj.key().id()}}')">删除</a></td>
+    <td align="center"><a href="/{{objname}}Update?id={{obj.key().id()}}">修改</a>&nbsp;|&nbsp;<a href="javascript:delPlugin('{{obj.key().id()}}')">删除</a></td>
     </tr>
     {%endfor%}
 </table>
-<script>
-    $j(function(){
-        $j.get('/getGameTypeList?game={{game}}',{},function(result,opt){
-            if(opt=='success'){
-                var list = JSON2.parse(result);
-                $j('.typeProp').each(function(k,el){
-                    var value=$j(el).html();
-                    for(var i=0;i<list.length;i++){
-                        if(list[i].id==value){
-                            $j(el).html(list[i].name);
-                        }
-                    }
-                });
-
-
-            }else{
-
-            }
-
-        });
-    });
-</script>
 {% endblock %}

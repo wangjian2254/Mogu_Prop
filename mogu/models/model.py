@@ -4,6 +4,7 @@
 #Time: 下午9:21
 import json
 import os
+from tools.util import getImagesUrl
 
 __author__ = u'王健'
 
@@ -93,7 +94,7 @@ class Images(db.Model):
 
     @property
     def imgurl(self):
-        return "http://%s/image/%s" % (os.environ['HTTP_HOST'], self.key().id())
+        return getImagesUrl(self.key().id())
 
 
 class Notice(db.Model):

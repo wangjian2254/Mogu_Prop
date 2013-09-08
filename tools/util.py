@@ -1,4 +1,5 @@
 #coding=utf-8
+import os
 import re
 import string
 from jinja2 import filters
@@ -275,9 +276,12 @@ def getPageing(index,page=0):
 #         return False
 
 
-def getResult(result,success=True,message=u''):
-    return {'result':result,'success':success,'message':message}
+def getResult(result,success=True,message=u'',status=200):
+    return {'result':result,'success':success,'message':message,'status':status}
 
+
+def getImagesUrl(id):
+    return "http://%s/image/%s" % (os.environ['HTTP_HOST'], id)
 
 def datetimeformat(value, format='%Y-%m-%d %H:%M'):
     return value.strftime(format)

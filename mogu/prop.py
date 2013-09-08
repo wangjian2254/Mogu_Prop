@@ -3,11 +3,12 @@
 #Date: 13-9-7
 #Time: 上午11:31
 import json
+import datetime
 from google.appengine.ext import db
-from mogu.models.model import Game, PropType, Prop, Images
+from mogu.models.model import Game, PropType, Prop, Images, UserProp, UserPropBuy, UserPropUsed
 from tools.page import Page
-from tools.util import getResult
-
+from tools.util import getResult, getImagesUrl
+timezone = datetime.timedelta(hours=8)
 __author__ = u'王健'
 
 def getGameList():
@@ -22,6 +23,15 @@ def getPropList(game,type):
         list = list.filter('type =',int(type))
     list = list.order('index')
     return list
+
+def getUserPropList(username,game):
+    return UserProp.all().filter('username =',username).filter('game =',game)
+
+def getUserProp(username,propcodeid):
+    for u in UserProp.all().filter('username =',username).filter('prop =',propcodeid):
+        return u
+    return None
+
 
 class GetGameTypeList(Page):
     def get(self):
@@ -216,3 +226,113 @@ class PropUpdate(Page):
         self.render('template/prop/propUpdate.html',
                     {'obj': obj, 'id': obj.key().id(),'gamelist':gamelist,'game':game, 'result': 'succeed', 'msg': u'修改成功。'})
 
+class ClientPropTypeList(Page):
+    def get(self):
+        game = self.request.get('game')
+        if game:
+            list=[]
+            for p in getPropTypeList(game):
+                list.append({'id':p.key().id(),'name':p.name,'game':p.game,'index':p.index})
+            self.flush(getResult(list, True, u'获取道具类型成功。'))
+            return
+        self.flush(getResult('', False, u'获取道具类型，未提供id。'))
+
+
+class ClientPropList(Page):
+    def get(self):
+        game = self.request.get('game')
+        type = self.request.get('type')
+        if game:
+            list=[]
+            content=None
+            for p in getPropList(game,type):
+                content={'id':p.key().id(),'name':p.name,'game':p.game,'type':p.type,'index':p.index,'code':p.code,'cod\
+                eid':p.codeid,'desc':p.desc,'ispub':p.ispub,'pricetype':p.pricetype,'price1':p.price1,'price2':p.price2,'images':[]}
+                for img in p.images:
+                    content['images'].append({'id':img,'url':getImagesUrl(img)})
+                list.append(content)
+            self.flush(getResult(list, True, u'获取道具类型成功。'))
+            return
+        self.flush(getResult('', False, u'获取道具类型失败，未提供游戏code。'))
+
+class ClientUserProp(Page):
+    def get(self):
+        username = self.request.get('username')
+        game = self.request.get('game')
+        if username and game:
+            userproplist=getUserPropList(username,game)
+            list = []
+            for up in userproplist:
+                list.append({'propcodeid':up.prop,'num':up.num,'game':up.game})
+            self.flush(getResult(list, True, u'获取道具数量成功。'))
+            return
+        self.flush(getResult('', False, u'获取道具数量失败，参数不正确。'))
+
+class ClientPropBuy(Page):
+    def get(self):
+        username = self.request.get('username')
+        game = self.request.get('game')
+        propcodeid = self.request.get('propcodeid')
+        num = self.request.get('num')
+        pricetype = self.request.get('pricetype')
+        price1 = self.request.get('price1')
+        price2 = self.request.get('price2')
+        if username and game and propcodeid and num and pricetype :
+            upb=UserPropBuy()
+            upb.username = username
+            upb.game = game
+            upb.prop = propcodeid
+            upb.num = int(num)
+            upb.datetime = datetime.datetime.utcnow() + timezone
+            upb.pricetype = int(pricetype)
+            upb.price1 = int(price1)
+            upb.price2 = int(price2)
+            upb.put()
+            uprop = getUserProp()
+            if uprop:
+                uprop.num=uprop.num+int(num)
+                uprop.put()
+
+
+            else:
+                uprop=UserProp()
+                uprop.username = username
+                uprop.game = game
+                uprop.prop = propcodeid
+                uprop.num = int(num)
+                uprop.put()
+            self.flush(getResult('', True, u'购买道具成功。'))
+            return
+        self.flush(getResult('', False, u'购买道具失败，参数不正确。'))
+
+class ClientPropUsed(Page):
+    def get(self):
+        username = self.request.get('username')
+        game = self.request.get('game')
+        propcodeid = self.request.get('propcodeid')
+        num = self.request.get('num')
+
+        if username and game and propcodeid and num  :
+            upb=UserPropUsed()
+            upb.username = username
+            upb.game = game
+            upb.prop = propcodeid
+            upb.num = int(num)
+            upb.datetime = datetime.datetime.utcnow() + timezone
+
+
+            uprop = getUserProp()
+            if uprop:
+                if uprop.num>=int(num):
+                    uprop.num=uprop.num-int(num)
+                    uprop.put()
+                    upb.put()
+                    self.flush(getResult('', True, u'使用道具成功。'))
+                    return
+                else:
+                    self.flush(getResult('', False, u'使用道具失败，道具数量不足。'))
+                    return
+            else:
+                self.flush(getResult('', False, u'使用道具失败，道具数量不足。'))
+                return
+        self.flush(getResult('', False, u'使用道具失败，参数不正确。'))
