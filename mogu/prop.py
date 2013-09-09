@@ -248,8 +248,7 @@ class ClientPropList(Page):
             list=[]
             content=None
             for p in getPropList(game,type):
-                content={'id':p.key().id(),'name':p.name,'game':p.game,'type':p.type,'index':p.index,'code':p.code,'cod\
-                eid':p.codeid,'desc':p.desc,'ispub':p.ispub,'pricetype':p.pricetype,'price1':p.price1,'price2':p.price2,'images':[]}
+                content={'id':p.key().id(),'name':p.name,'game':p.game,'type':p.type,'index':p.index,'code':p.code,'codeid':p.codeid,'desc':p.desc,'ispub':p.ispub,'pricetype':p.pricetype,'price1':p.price1,'price2':p.price2,'images':[]}
                 for img in p.images:
                     content['images'].append({'id':img,'url':getImagesUrl(img)})
                 list.append(content)
@@ -259,7 +258,7 @@ class ClientPropList(Page):
 
 class ClientUserProp(Page):
     def get(self):
-        username = self.request.get('username')
+        username = self.request.get('UserName')
         game = self.request.get('game')
         if username and game:
             userproplist=getUserPropList(username,game)
@@ -272,7 +271,7 @@ class ClientUserProp(Page):
 
 class ClientPropBuy(Page):
     def get(self):
-        username = self.request.get('username')
+        username = self.request.get('UserName')
         game = self.request.get('game')
         propcodeid = self.request.get('propcodeid')
         num = self.request.get('num')
@@ -309,7 +308,7 @@ class ClientPropBuy(Page):
 
 class ClientPropUsed(Page):
     def get(self):
-        username = self.request.get('username')
+        username = self.request.get('UserName')
         game = self.request.get('game')
         propcodeid = self.request.get('propcodeid')
         num = self.request.get('num')

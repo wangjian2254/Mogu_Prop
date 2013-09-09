@@ -281,7 +281,7 @@ def getResult(result,success=True,message=u'',status=200):
 
 
 def getImagesUrl(id):
-    return "http://%s/image/%s" % (os.environ['HTTP_HOST'], id)
+    return "http://%s/download?image_id=%s" % (os.environ['HTTP_HOST'], id)
 
 def datetimeformat(value, format='%Y-%m-%d %H:%M'):
     return value.strftime(format)
