@@ -153,8 +153,9 @@ class PropTypeUpdate(Page):
         obj.index = int(index)
 
         obj.put()
+        gamelist = getGameList()
         self.render('template/prop/propTypeUpdate.html',
-                    {'obj': obj, 'id': obj.key().id(), 'result': 'succeed', 'msg': u'修改成功。'})
+                    {'obj': obj, 'id': obj.key().id(),'gamelist':gamelist, 'result': 'succeed', 'msg': u'修改成功。'})
 
 
 class PropUpdate(Page):
